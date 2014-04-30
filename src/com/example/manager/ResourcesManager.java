@@ -36,17 +36,18 @@ public class ResourcesManager
     public GameActivity activity;
     public Camera camera;
     public VertexBufferObjectManager vbom;
+    public Font font;
+    
+    //---------------------------------------------
+    // TEXTURES & TEXTURE REGIONS
+    //---------------------------------------------
+    
     public ITextureRegion splash_region;
     public ITextureRegion menu_background_region;
     public ITextureRegion play_region;
     public ITextureRegion options_region;
     private BitmapTextureAtlas splashTextureAltas;
     private BuildableBitmapTextureAtlas menuTextureAtlas;
-    public Font font;
-    
-    //---------------------------------------------
-    // TEXTURES & TEXTURE REGIONS
-    //---------------------------------------------
     
     //---------------------------------------------
     // CLASS LOGIC
@@ -110,7 +111,7 @@ public class ResourcesManager
 		FontFactory.setAssetBasePath("font/");
 		final ITexture mainFontTexture = new BitmapTextureAtlas(activity.getTextureManager(), 256, 256, TextureOptions.BILINEAR_PREMULTIPLYALPHA);
 		
-		font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "font.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
+		font = FontFactory.createStrokeFromAsset(activity.getFontManager(), mainFontTexture, activity.getAssets(), "arial.ttf", 50, true, Color.WHITE, 2, Color.BLACK);
 		font.load();
 	}
     
@@ -145,6 +146,20 @@ public class ResourcesManager
         getInstance().vbom = vbom;
     }
     
+    public void unloadMenuTextures()
+    {
+    	menuTextureAtlas.unload();
+    }
+    
+    public void loadMenuTextures()
+    {
+    	menuTextureAtlas.load();
+    }
+    
+    public void unloadGameTextures()
+    {
+    	// TODO A faire quand les texture du jeu seront intégrées
+    }
     //---------------------------------------------
     // GETTERS AND SETTERS
     //---------------------------------------------
