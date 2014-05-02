@@ -1,6 +1,7 @@
 package com.example.manager;
 
 import org.andengine.engine.Engine;
+import org.andengine.engine.camera.BoundCamera;
 import org.andengine.engine.camera.Camera;
 import org.andengine.opengl.font.Font;
 import org.andengine.opengl.font.FontFactory;
@@ -13,9 +14,11 @@ import org.andengine.opengl.texture.atlas.bitmap.source.IBitmapTextureAtlasSourc
 import org.andengine.opengl.texture.atlas.buildable.builder.BlackPawnTextureAtlasBuilder;
 import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder.TextureAtlasBuilderException;
 import org.andengine.opengl.texture.region.ITextureRegion;
+import org.andengine.opengl.texture.region.ITiledTextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
-import android.graphics.Color;
 import org.andengine.util.debug.Debug;
+
+import android.graphics.Color;
 
 import com.example.testandengine.GameActivity;
 
@@ -34,7 +37,7 @@ public class ResourcesManager
     
     public Engine engine;
     public GameActivity activity;
-    public Camera camera;
+    public BoundCamera camera;
     public VertexBufferObjectManager vbom;
     public Font font;
     
@@ -48,6 +51,21 @@ public class ResourcesManager
     public ITextureRegion options_region;
     private BitmapTextureAtlas splashTextureAltas;
     private BuildableBitmapTextureAtlas menuTextureAtlas;
+    
+    //Game texture
+    
+    public BuildableBitmapTextureAtlas gameTextureAtlas;
+    
+    //Game texture region
+    
+    public ITextureRegion plateform1_region;
+    public ITextureRegion plateform2_region;
+    public ITextureRegion plateform3_region;
+    public ITextureRegion coin_region;
+    
+    //player texture region
+    
+    public ITiledTextureRegion player_region;
     
     //---------------------------------------------
     // CLASS LOGIC
@@ -93,7 +111,24 @@ public class ResourcesManager
 
     private void loadGameGraphics()
     {
+        BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/game/");
+        gameTextureAtlas = new BuildableBitmapTextureAtlas(activity.getTextureManager(), 1024, 1024, TextureOptions.BILINEAR);
         
+        plateform1_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "plateform1.png");
+        plateform2_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "plateform2.png");
+        plateform3_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "plateform3.png");
+        coin_region = BitmapTextureAtlasTextureRegionFactory.createFromAsset(gameTextureAtlas, activity, "coin.png");
+        player_region = BitmapTextureAtlasTextureRegionFactory.createTiledFromAsset(gameTextureAtlas, activity, "player.png", 3, 1);
+        
+        try
+        {
+        	this.gameTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 1, 0));
+        	this.gameTextureAtlas.load();
+        }
+        catch (final TextureAtlasBuilderException e)
+        {
+        	Debug.e(e);
+        }
     }
     
     private void loadGameFonts()
@@ -138,7 +173,7 @@ public class ResourcesManager
      * We use this method at beginning of game loading, to prepare Resources Manager properly,
      * setting all needed parameters, so we can latter access them from different classes (eg. scenes)
      */
-    public static void prepareManager(Engine engine, GameActivity activity, Camera camera, VertexBufferObjectManager vbom)
+    public static void prepareManager(Engine engine, GameActivity activity, BoundCamera camera, VertexBufferObjectManager vbom)
     {
         getInstance().engine = engine;
         getInstance().activity = activity;
